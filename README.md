@@ -55,7 +55,7 @@ func doSomething(r *http.Request) (*httpw.R, error) {
         return nil, errors.Wrapf(err, "unable to do something with user %s", userID)
     }
 
-    return &httpw.R{Status: http.StatusOK}
+    return &httpw.R{Status: http.StatusOK}, nil
 }
 ```
 
@@ -75,7 +75,7 @@ func doSomething(r *http.Request) (*httpw.R, error) {
     return &httpw.R{
         Status: http.StatusOK,
         Data:   user,
-    }
+    }, nil
 }
 ```
 
