@@ -16,7 +16,6 @@ script:
       --format 'table {{ .Tag }}\t{{.ID}}\t{{.Digest}}'
 
 after_success:
-  - "docker pull krostar/ci:publish-go-cover"
   - >-
       make docker-publish-go-cover
       DOCKER_RUN_ARGS="
