@@ -1,10 +1,10 @@
+// Package httpw defines and handled an idiomatic HTTP handler signature that requires nor hide no magic.
 package httpw
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
-
-	"github.com/pkg/errors"
 )
 
 // Wrapper handles wrapped function.
@@ -14,13 +14,15 @@ type Wrapper struct {
 
 // New returns a new wrapper.
 func New(opts ...Option) *Wrapper {
-	var o = options{
+	o := options{
 		dataMarshaler:      defaultDataMarshaler,
 		defaultErrorStatus: http.StatusInternalServerError,
 	}
+
 	for _, opt := range opts {
 		opt(&o)
 	}
+
 	return &Wrapper{o: &o}
 }
 
@@ -51,7 +53,7 @@ func defaultDataMarshaler(data interface{}) ([]byte, error) {
 
 	resp, err := json.Marshal(data)
 	if err != nil {
-		return nil, errors.Wrap(err, "unable to marshal data")
+		return nil, fmt.Errorf("unable to marshal data: %w", err)
 	}
 
 	return resp, nil

@@ -19,50 +19,44 @@ func TestNew(t *testing.T) {
 }
 
 func TestWrap(t *testing.T) {
-	var (
-		h = HandlerFunc(func(r *http.Request) (*Response, error) {
-			return &R{Status: http.StatusTeapot}, nil
-		})
-		recorder = httptest.NewRecorder()
-		request  = httptest.NewRequest(http.MethodGet, "/", nil)
-	)
+	request := httptest.NewRequest(http.MethodGet, "/", nil)
+	recorder := httptest.NewRecorder()
 
-	Wrap(h).ServeHTTP(recorder, request)
+	Wrap(HandlerFunc(
+		func(r *http.Request) (*Response, error) {
+			return &R{Status: http.StatusTeapot}, nil
+		},
+	)).ServeHTTP(recorder, request)
 
 	require.Equal(t, http.StatusTeapot, recorder.Code)
 }
 
 func TestWrapF(t *testing.T) {
-	var (
-		h = func(r *http.Request) (*Response, error) {
-			return &R{Status: http.StatusTeapot}, nil
-		}
-		recorder = httptest.NewRecorder()
-		request  = httptest.NewRequest(http.MethodGet, "/", nil)
-	)
+	request := httptest.NewRequest(http.MethodGet, "/", nil)
+	recorder := httptest.NewRecorder()
 
-	WrapF(h).ServeHTTP(recorder, request)
+	WrapF(func(r *http.Request) (*Response, error) {
+		return &R{Status: http.StatusTeapot}, nil
+	}).ServeHTTP(recorder, request)
 
 	require.Equal(t, http.StatusTeapot, recorder.Code)
 }
 
 func TestWrapper_WrapF(t *testing.T) {
-	var (
-		w = New()
-		h = func(r *http.Request) (*Response, error) {
-			return &R{Status: http.StatusTeapot}, nil
-		}
-		recorder = httptest.NewRecorder()
-		request  = httptest.NewRequest(http.MethodGet, "/", nil)
-	)
+	request := httptest.NewRequest(http.MethodGet, "/", nil)
+	recorder := httptest.NewRecorder()
 
-	w.WrapF(h).ServeHTTP(recorder, request)
+	New().
+		WrapF(func(r *http.Request) (*Response, error) {
+			return &R{Status: http.StatusTeapot}, nil
+		}).
+		ServeHTTP(recorder, request)
 
 	require.Equal(t, http.StatusTeapot, recorder.Code)
 }
 
 func TestDefaultDataMarshaler(t *testing.T) {
-	var tests = map[string]struct {
+	tests := map[string]struct {
 		data            interface{}
 		expectedRepr    []byte
 		expectedFailure bool

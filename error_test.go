@@ -22,7 +22,7 @@ func TestError_String(t *testing.T) {
 }
 
 func TestError_Error(t *testing.T) {
-	var e = Error{
+	e := Error{
 		Status: http.StatusNotFound,
 		Err:    errors.New("eww"),
 	}

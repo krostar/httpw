@@ -1,9 +1,8 @@
 package httpw
 
 import (
+	"fmt"
 	"net/http"
-
-	"github.com/pkg/errors"
 )
 
 // Wrap wraps a classic http.Handler to be used as a wrapped Handler.
@@ -58,9 +57,10 @@ func (w Wrapper) unwrap(h Handler, r *http.Request) (int, []byte, http.Header, e
 	resp, mErr := w.o.dataMarshaler(data)
 	if mErr != nil {
 		if err != nil {
-			mErr = errors.Wrap(err, mErr.Error()+", original error was: ")
+			mErr = fmt.Errorf("data marshaler failed: %s, original error was %w", mErr.Error(), err)
 		}
 		err = mErr
 	}
+
 	return status, resp, header, err
 }

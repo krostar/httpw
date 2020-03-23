@@ -10,14 +10,14 @@ import (
 )
 
 func TestHandlerFunc_ServeHTTP(t *testing.T) {
-	var (
-		r = httptest.NewRequest(http.MethodGet, "/", nil)
-		h = func(r *http.Request) (*Response, error) {
-			return &R{Status: http.StatusTeapot}, nil
-		}
-	)
+	r := httptest.NewRequest(http.MethodGet, "/", nil)
 
-	resp, err := HandlerFunc(h).ServeHTTP(r)
+	resp, err := HandlerFunc(
+		func(r *http.Request) (*Response, error) {
+			return &R{Status: http.StatusTeapot}, nil
+		},
+	).ServeHTTP(r)
+
 	require.NoError(t, err)
 	assert.Equal(t, http.StatusTeapot, resp.Status)
 }

@@ -31,6 +31,4 @@ func (e Error) String() string {
 }
 
 // Error implements the error interface.
-func (e Error) Error() string {
-	return e.String()
-}
+func (e Error) Error() string { return e.String() }

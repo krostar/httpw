@@ -10,13 +10,13 @@ import (
 )
 
 func TestWithOnErrorCallback(t *testing.T) {
-	var w = New(WithOnErrorCallback(nil))
+	w := New(WithOnErrorCallback(nil))
 	require.Len(t, w.o.onError, 1)
 	assert.Nil(t, w.o.onError[0])
 }
 
 func TestWithDataMarshaler(t *testing.T) {
-	var w = New(WithDataMarshaler(nil))
+	w := New(WithDataMarshaler(nil))
 	assert.Nil(t, w.o.dataMarshaler)
 }
 
@@ -26,6 +26,6 @@ type marshalFailer int
 func (marshalFailer) MarshalJSON() ([]byte, error) { return nil, errors.New("fail") }
 
 func TestWithDefaultErrorStatus(t *testing.T) {
-	var w = New(WithDefaultErrorStatus(http.StatusTeapot))
+	w := New(WithDefaultErrorStatus(http.StatusTeapot))
 	assert.Equal(t, http.StatusTeapot, w.o.defaultErrorStatus)
 }

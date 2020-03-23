@@ -10,15 +10,14 @@ import (
 )
 
 func Example() {
-	var (
-		wrapper = httpw.New(
-			httpw.WithOnErrorCallback(func(r *http.Request, err error) {
-				fmt.Println("err", err)
-			}),
-		)
-		recorder = httptest.NewRecorder()
-		request  = httptest.NewRequest(http.MethodGet, "/", nil)
+	wrapper := httpw.New(
+		httpw.WithOnErrorCallback(func(r *http.Request, err error) {
+			fmt.Println("err:", err)
+		}),
 	)
+
+	request := httptest.NewRequest(http.MethodGet, "/", nil)
+	recorder := httptest.NewRecorder()
 
 	wrapper.WrapF(func(r *http.Request) (*httpw.R, error) {
 		return nil, errors.New("boum")
@@ -27,6 +26,6 @@ func Example() {
 	fmt.Println("status", recorder.Code)
 
 	// Output:
-	// err boum
+	// err: boum
 	// status 500
 }
